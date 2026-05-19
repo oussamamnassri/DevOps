@@ -60,10 +60,10 @@ void setup() {
 void loop() {
   lireCommandeUtilisateur();
 
-  if (obstacleDetecte == true) {
+  if (obstacleDetecte) {
     stopMoteurs();
 
-    if (robotBloque == false) {
+    if (!robotBloque) {
       Serial.println("Obstacle detecte <= 50 cm : ROBOT STOP");
       robotBloque = true;
     }
@@ -71,7 +71,7 @@ void loop() {
     return;
   }
 
-  if (robotBloque == true) {
+  if (robotBloque) {
     Serial.println("Obstacle disparu : le robot continue");
     robotBloque = false;
     ancienneCommande = 'X';
@@ -115,6 +115,7 @@ void lireCommandeUtilisateur() {
 }
 
 void recevoirI2C(int nombreOctets) {
+  (void)nombreOctets;
   while (Wire.available()) {
     char data = Wire.read();
 

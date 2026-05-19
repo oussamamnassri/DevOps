@@ -8,8 +8,8 @@
 #define ECHO_AV_D 5
 #define TRIG_AR_G 6
 #define ECHO_AR_G 7
-#define TRIG_AR_D 8
-#define ECHO_AR_D 9
+#define TRIG_AR_D 10
+#define ECHO_AR_D 11
 
 const int SEUIL_CM = 50;
 const unsigned long TIMEOUT_US = 30000;
@@ -35,7 +35,9 @@ void setup() {
   digitalWrite(TRIG_AR_G, LOW);
   digitalWrite(TRIG_AR_D, LOW);
 
-  envoyerEtatObstacle(false);
+  if (!envoyerEtatObstacle(false)) {
+    Serial.println("Erreur I2C: aucun esclave");
+  }
 }
 
 void loop() {
@@ -43,7 +45,9 @@ void loop() {
 
   if (obstacle != obstacleDetecte) {
     obstacleDetecte = obstacle;
-    envoyerEtatObstacle(obstacleDetecte);
+    if (!envoyerEtatObstacle(obstacleDetecte)) {
+      Serial.println("Erreur I2C: envoi etat obstacle");
+    }
   }
 
   delay(50);
@@ -51,22 +55,22 @@ void loop() {
 
 bool detecterObstacle() {
   long distanceAvG = mesurerDistanceCm(TRIG_AV_G, ECHO_AV_G);
-  if (distanceAvG <= SEUIL_CM) {
+  if (distanceAvG > 0 && distanceAvG <= SEUIL_CM) {
     return true;
   }
 
   long distanceAvD = mesurerDistanceCm(TRIG_AV_D, ECHO_AV_D);
-  if (distanceAvD <= SEUIL_CM) {
+  if (distanceAvD > 0 && distanceAvD <= SEUIL_CM) {
     return true;
   }
 
   long distanceArG = mesurerDistanceCm(TRIG_AR_G, ECHO_AR_G);
-  if (distanceArG <= SEUIL_CM) {
+  if (distanceArG > 0 && distanceArG <= SEUIL_CM) {
     return true;
   }
 
   long distanceArD = mesurerDistanceCm(TRIG_AR_D, ECHO_AR_D);
-  return distanceArD <= SEUIL_CM;
+  return distanceArD > 0 && distanceArD <= SEUIL_CM;
 }
 
 long mesurerDistanceCm(int trigPin, int echoPin) {
@@ -78,14 +82,14 @@ long mesurerDistanceCm(int trigPin, int echoPin) {
 
   unsigned long duree = pulseIn(echoPin, HIGH, TIMEOUT_US);
   if (duree == 0) {
-    return 999;
+    return -1;
   }
 
   return duree / 58;
 }
 
-void envoyerEtatObstacle(bool obstacle) {
+bool envoyerEtatObstacle(bool obstacle) {
   Wire.beginTransmission(ADRESSE_MOTEUR);
   Wire.write(obstacle ? 'O' : 'N');
-  Wire.endTransmission();
+  return Wire.endTransmission() == 0;
 }
