@@ -37,7 +37,7 @@ void setup() {
 
   int erreurInit = envoyerEtatObstacle(false);
   if (erreurInit != 0) {
-    Serial.print("Erreur I2C: echec transmission initiale (code=");
+    Serial.print("Erreur I2C: échec transmission initiale (code=");
     Serial.print(erreurInit);
     Serial.println(")");
   }
@@ -50,7 +50,7 @@ void loop() {
     obstacleDetecte = obstacle;
     int erreurEnvoi = envoyerEtatObstacle(obstacleDetecte);
     if (erreurEnvoi != 0) {
-      Serial.print("Erreur I2C: echec envoi etat obstacle (etat=");
+      Serial.print("Erreur I2C: échec envoi état obstacle (état=");
       Serial.print(obstacleDetecte ? "O" : "N");
       Serial.print(", code=");
       Serial.print(erreurEnvoi);
