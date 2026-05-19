@@ -53,7 +53,7 @@ void setup() {
   stopMoteurs();
 
   Serial.println("Arduino moteurs pret");
-  Serial.println("Commandes : F=avant, B=arrière, L=gauche, R=droite, S=stop");
+  Serial.println("Commandes : F=avant, B=arriere, L=gauche, R=droite, S=stop");
   Serial.println("Vitesses : 1=100, 2=150, 3=200, 4=255");
 }
 
@@ -64,7 +64,7 @@ void loop() {
     stopMoteurs();
 
     if (!robotBloque) {
-      Serial.println("Obstacle détecté <= 50 cm : ROBOT STOP");
+      Serial.println("Obstacle detecte <= 50 cm : ROBOT STOP");
       robotBloque = true;
     }
 
@@ -133,7 +133,7 @@ void executerCommande() {
   if (commande != ancienneCommande) {
     ancienneCommande = commande;
 
-    Serial.print("Commande exécutée : ");
+    Serial.print("Commande executee : ");
     Serial.println(commande);
 
     if (commande == 'F') {
