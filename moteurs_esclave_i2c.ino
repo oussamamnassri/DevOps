@@ -53,7 +53,7 @@ void setup() {
   stopMoteurs();
 
   Serial.println("Arduino moteurs pret");
-  Serial.println("Commandes : F=avant, B=arriere, L=gauche, R=droite, S=stop");
+  Serial.println("Commandes : F=avant, B=arrière, L=gauche, R=droite, S=stop");
   Serial.println("Vitesses : 1=100, 2=150, 3=200, 4=255");
 }
 
@@ -115,7 +115,9 @@ void lireCommandeUtilisateur() {
 }
 
 void recevoirI2C(int nombreOctets) {
-  (void)nombreOctets;
+  if (nombreOctets < 1) {
+    return;
+  }
   while (Wire.available()) {
     char data = Wire.read();
 
