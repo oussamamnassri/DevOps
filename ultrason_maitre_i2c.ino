@@ -35,8 +35,11 @@ void setup() {
   digitalWrite(TRIG_AR_G, LOW);
   digitalWrite(TRIG_AR_D, LOW);
 
-  if (!envoyerEtatObstacle(false)) {
-    Serial.println("Erreur I2C: aucun esclave");
+  int erreurInit = envoyerEtatObstacle(false);
+  if (erreurInit != 0) {
+    Serial.print("Erreur I2C: echec transmission initiale (code=");
+    Serial.print(erreurInit);
+    Serial.println(")");
   }
 }
 
@@ -45,8 +48,13 @@ void loop() {
 
   if (obstacle != obstacleDetecte) {
     obstacleDetecte = obstacle;
-    if (!envoyerEtatObstacle(obstacleDetecte)) {
-      Serial.println("Erreur I2C: envoi etat obstacle");
+    int erreurEnvoi = envoyerEtatObstacle(obstacleDetecte);
+    if (erreurEnvoi != 0) {
+      Serial.print("Erreur I2C: echec envoi etat obstacle (etat=");
+      Serial.print(obstacleDetecte ? "O" : "N");
+      Serial.print(", code=");
+      Serial.print(erreurEnvoi);
+      Serial.println(")");
     }
   }
 
@@ -88,8 +96,8 @@ long mesurerDistanceCm(int trigPin, int echoPin) {
   return duree / 58;
 }
 
-bool envoyerEtatObstacle(bool obstacle) {
+int envoyerEtatObstacle(bool obstacle) {
   Wire.beginTransmission(ADRESSE_MOTEUR);
   Wire.write(obstacle ? 'O' : 'N');
-  return Wire.endTransmission() == 0;
+  return Wire.endTransmission();
 }

@@ -64,7 +64,7 @@ void loop() {
     stopMoteurs();
 
     if (!robotBloque) {
-      Serial.println("Obstacle detecte <= 50 cm : ROBOT STOP");
+      Serial.println("Obstacle détecté <= 50 cm : ROBOT STOP");
       robotBloque = true;
     }
 
@@ -131,7 +131,7 @@ void executerCommande() {
   if (commande != ancienneCommande) {
     ancienneCommande = commande;
 
-    Serial.print("Commande executee : ");
+    Serial.print("Commande exécutée : ");
     Serial.println(commande);
 
     if (commande == 'F') {
